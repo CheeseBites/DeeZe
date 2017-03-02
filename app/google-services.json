@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "251585278999",
+    "firebase_url": "https://eyeris-b8879.firebaseio.com",
+    "project_id": "eyeris-b8879",
+    "storage_bucket": "eyeris-b8879.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251585278999:android:b9b88a5843d32253",
+        "android_client_info": {
+          "package_name": "julianleng.eyeris"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "251585278999-t51mktnc6g4al8v4crc2aeibjfp0pmgu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "julianleng.eyeris",
+            "certificate_hash": "0640e6afb4de9ed61ce1dd552d25e6b0c833cf84"
+          }
+        },
+        {
+          "client_id": "251585278999-glc6gr35bv2qh9msid341pn22nj3ie49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkUibAPilYJeI69Lj8wyarumuuLZkFch4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251585278999-glc6gr35bv2qh9msid341pn22nj3ie49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
