@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Eyeris</string>
+    <string name="Button1">Button1</string>
+    <string name="Button2">Button2</string>
+    <string name="Button3">Button3</string>
+    <string name="upvote_count">0</string>
+    <string name="post_date">03/17/2017</string>
+    <string name="post_title">This is just an example title.</string>
+    <string name="time_ago">14H ago</string>
+    <string name="action_settings">ahh</string>
+    <string-array name="filters">
+        <item>Hot</item>
+        <item>New</item>
+        <item>Top</item>
+    </string-array>
+    <string name="post_content">This is where the post content would go..*IMart from the Illini is total legend. Had won back-to-back national titles.</string>
 </resources>

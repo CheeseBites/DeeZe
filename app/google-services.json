@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "251585278999-t51mktnc6g4al8v4crc2aeibjfp0pmgu.apps.googleusercontent.com",
+          "client_id": "251585278999-m1hc194v0u9sgf5536bsbtrb9p9e4c8s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "julianleng.eyeris",
-            "certificate_hash": "0640e6afb4de9ed61ce1dd552d25e6b0c833cf84"
+            "certificate_hash": "90a923246663448ea480cbd2c6d61202d904664a"
           }
         },
         {
