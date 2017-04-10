@@ -12,15 +12,21 @@ import android.widget.Button;
 import android.location.Location;
 
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SubmitPostActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
+    GeoFire geoFire = new GeoFire(ref);
     double latitude;
     double longitude;
     String postTitle;
@@ -71,14 +77,17 @@ public class SubmitPostActivity extends AppCompatActivity implements
     }
 
     private void submitPost() {
-            this.latitude = mLastLocation.getLatitude();
-            this.longitude = mLastLocation.getLongitude();
+        //send to Firebase
+        //get unqiue ID from Firebase
 
-        //send to latitude/longitude to GeoFire
-        //get GeoFire id
+        //send to geofire with unique ID + longitude/latitude
 
-        //send to Firebase with GeoFire ID + title, content, tagss
+    }
 
+    private void submitToGeoFire(String postID){
+        this.latitude = mLastLocation.getLatitude();
+        this.longitude = mLastLocation.getLongitude();
+        geoFire.setLocation(postID, new GeoLocation(this.latitude, this.longitude));
     }
 
 
