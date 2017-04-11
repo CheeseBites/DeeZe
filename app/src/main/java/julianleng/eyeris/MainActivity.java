@@ -2,11 +2,16 @@ package julianleng.eyeris;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,6 +31,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private HomePageAdapter adapter;
+    private BottomNavigationView bottomNavigation;
+    private Fragment fragment;
+    private FragmentManager fragmentManager;
     private List<ScrollablePosts> listItems;public static final String POSTS = "posts";
     private RecyclerView mPostsRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -38,19 +46,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private String mUsername;
     private String mPhotoUrl;
     private GoogleApiClient mGoogleApiClient;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Spinner filterspinner = (Spinner) findViewById(R.id.filterspinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.filters,android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        filterspinner.setAdapter(spinnerAdapter);
-
-        mPostsRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setStackFromEnd(true);
         //user authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -69,36 +69,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-        //Initializing Database
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<ScrollablePosts, HomePageAdapter.HomeViewHolder>(
-                ScrollablePosts.class,
-                R.layout.card_layout,
-                HomePageAdapter.HomeViewHolder.class,
-                mFirebaseDatabaseReference.child(POSTS))
-         {
-            @Override
-            protected void populateViewHolder(HomePageAdapter.HomeViewHolder viewHolder, ScrollablePosts item, int position) {
-                viewHolder.post_title.setText(item.getPost_title());
-                viewHolder.post_content.setText(item.getPost_content());
-                viewHolder.post_date.setText(item.getPost_date());
-                viewHolder.votecount.setText("" + item.getPost_votes());
-            }
-        };
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        bottomNavigation = (BottomNavigationView) findViewById(R.id.navigation);
+        fragmentManager = getSupportFragmentManager();
+        fragment = new HomeFragment();
+        final FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container, fragment).commit();
+        bottomNavigation.setOnNavigationItemSelectedListener((new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount){
-                super.onItemRangeInserted(positionStart, itemCount);
-                int postsCount = mFirebaseAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1|| (positionStart >= (postsCount -1) && lastVisiblePosition == (positionStart -1))){
-                    mPostsRecyclerView.scrollToPosition(positionStart);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch(id){
+                    case R.id.menu_home:
+                        fragment = new HomeFragment();
+                        break;
+                    case R.id.menu_notifications:
+                        fragment = new NotificationFragment();
+                        break;
+                    case R.id.menu_post:
+                        fragment = new PostFragment();
+                        break;
+                    case R.id.menu_profile:
+                        fragment = new ProfileFragment();
+                        break;
+                    case R.id.menu_search:
+                        fragment = new SearchFragment();
+                        break;
                 }
+                final FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.main_container, fragment).commit();
+                return true;
             }
-        });
-        mPostsRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mPostsRecyclerView.setAdapter(mFirebaseAdapter);
+        }));
     }
 
     @Override

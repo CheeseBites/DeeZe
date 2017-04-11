@@ -14,4 +14,13 @@
         <item>Top</item>
     </string-array>
     <string name="post_content">This is where the post content would go..*IMart from the Illini is total legend. Had won back-to-back national titles.</string>
+    <string name="settings">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_post">Post</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_search">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,23 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#6b6b6b"
+    xmlns:design="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
     tools:context=".HomePageAdapter">
 
-    <Spinner
-        android:id="@+id/filterspinner"
+  <FrameLayout
+      android:id="@+id/main_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/navigation"
+      android:layout_alignParentTop="true">
+    </FrameLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        ></Spinner>
+        android:background="#737373"
+        app:elevation="16dp"
+        app:itemIconTint="@drawable/nav_item_color_state"
+        app:itemTextColor="@drawable/nav_item_color_state"
+        android:layout_alignParentBottom="true"
+        design:menu="@menu/bottom_nav_items" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/filterspinner"
-        android:background="#ed1000e6"
-        ></android.support.v7.widget.RecyclerView>
 </RelativeLayout>
