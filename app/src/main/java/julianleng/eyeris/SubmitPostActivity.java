@@ -17,11 +17,13 @@ import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class SubmitPostActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -33,6 +35,8 @@ public class SubmitPostActivity extends AppCompatActivity implements
     String postContent;
     String postTags;
     String postId;
+    String username;
+    String postDate;
 
 
     @Override
@@ -60,7 +64,7 @@ public class SubmitPostActivity extends AppCompatActivity implements
         final Button cancelButton = (Button) findViewById(R.id.Cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //change activity to MainActivity
+                //change activity to homepage
             }
         });
 
@@ -77,17 +81,36 @@ public class SubmitPostActivity extends AppCompatActivity implements
     }
 
     private void submitPost() {
-        //send to Firebase
-        //get unqiue ID from Firebase
-
-        //send to geofire with unique ID + longitude/latitude
-
+        //1.send to Firebase
+        //2. return with unique key
+        postId = submitToFirebase();
+        //3.send to geofire with unique ID + longitude/latitude
+        submitToGeofire(postId);
     }
 
-    private void submitToGeoFire(String postID){
+    private String submitToFirebase(){
+        //send postTitle, postContent, postTags, current User username
+        DatabaseReference postsRef = ref.child("posts");
+        DatabaseReference newPostRef = postsRef.push();
+        newPostRef.setValue(new ScrollablePosts(postDate, postTitle, postContent));
+        return postsRef.getKey();
+    }
+
+    private void submitToGeofire(String postId){
         this.latitude = mLastLocation.getLatitude();
         this.longitude = mLastLocation.getLongitude();
-        geoFire.setLocation(postID, new GeoLocation(this.latitude, this.longitude));
+
+        geoFire.setLocation(postId, new GeoLocation(this.latitude, this.longitude),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            System.err.println("There was an error saving the location to GeoFire: " + error);
+                        } else {
+                            System.out.println("Location saved on server successfully!");
+                        }
+                    }
+                });
     }
 
 
