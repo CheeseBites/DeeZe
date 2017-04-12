@@ -1,43 +1,43 @@
 package julianleng.eyeris;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, PostFragment.OnSubmit{
+        GoogleApiClient.OnConnectionFailedListener, PostFragment.updateLocation {
 
     private HomePageAdapter adapter;
     private BottomNavigationView bottomNavigation;
     private Fragment fragment;
     private FragmentManager fragmentManager;
-    private List<ScrollablePosts> listItems;public static final String POSTS = "posts";
+    private List<ScrollablePosts> listItems;
+    public static final String POSTS = "posts";
     private RecyclerView mPostsRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private DatabaseReference mFirebaseDatabaseReference;
@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private String mUsername;
     private String mPhotoUrl;
     private GoogleApiClient mGoogleApiClient;
-    static Location mLastLocation;
+    private Location mLastLocation;
+    private User currentUser;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +59,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //user authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null){
+        if (mFirebaseUser == null) {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return;
-        }else{
+        } else {
             mUsername = mFirebaseUser.getDisplayName();
-            if(mFirebaseUser.getPhotoUrl() != null){
+            if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                switch(id){
+                switch (id) {
                     case R.id.menu_home:
                         fragment = new HomeFragment();
                         break;
@@ -107,6 +109,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }));
     }
 
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
@@ -123,9 +136,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+
     @Override
-    //implements interface from PostFragment to allow passing of location object
     public Location getLocation() {
-        return mLastLocation;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return mLastLocation;
+        }
+        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        return this.mLastLocation;
     }
 }

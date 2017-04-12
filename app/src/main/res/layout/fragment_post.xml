@@ -2,12 +2,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="julianleng.eyeris.PostFragment">
+    xmlns:design="http://schemas.android.com/apk/res-auto"
+    tools:context=".PostFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="458dp"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/Title" />
+
+    <Button
+        android:id="@+id/button_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="130dp"
+        android:text="@string/SubmitButton" />
+
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="130dp"
+        android:text="@string/CancelButton" />
+
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_submit"
+        android:layout_alignRight="@+id/button_cancel"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="61dp"
+        android:ems="10"
+        android:text="@string/Title" android:inputType="text" />
+
+
 
 </FrameLayout>

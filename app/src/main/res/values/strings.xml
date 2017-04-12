@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">Eyeris</string>
+    <string name="app_name">dZee</string>
     <string name="Button1">Button1</string>
+    <string name="SubmitButton">Submit</string>
+    <string name="CancelButton">Cancel</string>
+    <string name="Title">Title</string>
     <string name="Button2">Button2</string>
     <string name="Button3">Button3</string>
     <string name="upvote_count">0</string>
