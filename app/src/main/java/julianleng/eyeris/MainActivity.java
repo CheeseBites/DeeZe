@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
+    //implements interface from PostFragment to allow passing of location object
     public Location getLocation() {
         return mLastLocation;
     }

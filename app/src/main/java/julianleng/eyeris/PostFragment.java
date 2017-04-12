@@ -53,6 +53,7 @@ public class PostFragment extends android.support.v4.app.Fragment{
         public Location getLocation ();
     }
 
+    //this isn't right, but the general idea of how the buttons work
     public void onCreate() {
 
         final Button submitButton = (Button) findViewById(R.id.Submit);
@@ -81,13 +82,14 @@ public class PostFragment extends android.support.v4.app.Fragment{
     }
 
     private void submitPost() {
-        //1.send to Firebase
-        //2. return with unique key
+        //1.send to Firebase 2. return with unique key
         postId = submitToFirebase();
+
         //3.send to geofire with unique ID + longitude/latitude
         submitToGeofire(postId);
     }
 
+    //submits to Firebase and returns the unique string generated
     private String submitToFirebase() {
         //send postTitle, postContent, postTags, current User username
         DatabaseReference postsRef = ref.child("posts");
