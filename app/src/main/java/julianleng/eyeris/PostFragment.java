@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.location.Location;
+import android.app.FragmentTransaction;
 
 
 import com.firebase.geofire.GeoFire;
@@ -51,13 +53,23 @@ public class PostFragment extends android.support.v4.app.Fragment{
 
     //fragment takes location from activity
     public interface updateLocation {
-        public Location getLocation ();
+        public Location getLocation();
     }
 
-    //this isn't right, but the general idea of how the buttons work
-    public void onCreate() {
 
-        final Button submitButton = (Button) findViewById(R.id.button_submit);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+
+    @Nullable
+    @Override
+    //still figuring out buttons in fragments
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_post, container, false);
+
+        //submit
+        final Button submitButton = (Button) view.findViewById(R.id.button_submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // get location, submit the post
@@ -65,22 +77,17 @@ public class PostFragment extends android.support.v4.app.Fragment{
             }
         });
 
-        final Button cancelButton = (Button) findViewById(R.id.button_cancel);
+        //cancel
+        final Button cancelButton = (Button) view.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //change activity to homepage
+
             }
         });
+
+        return view;
     }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Create an instance of GoogleAPIClient.
-
-        return inflater.inflate(R.layout.fragment_post, container, false);
-    }
-
 
 
     private void submitPost() {
@@ -120,16 +127,12 @@ public class PostFragment extends android.support.v4.app.Fragment{
     }
 
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof updateLocation)
-        {
+        if (activity instanceof updateLocation) {
             locationUpdate = (updateLocation) activity;
-        }
-        else
-        {
+        } else {
             throw new ClassCastException();
         }
-
+    }
 }
