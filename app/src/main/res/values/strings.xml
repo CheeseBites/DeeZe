@@ -5,6 +5,8 @@
     <string name="CancelButton">Cancel</string>
     <string name="Title">Title</string>
     <string name="Button2">Button2</string>
+    <string name="Content">Content</string>
+    <string name="Tags">Tags</string>
     <string name="Button3">Button3</string>
     <string name="upvote_count">0</string>
     <string name="post_date">03/17/2017</string>

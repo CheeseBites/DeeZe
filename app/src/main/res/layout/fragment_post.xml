@@ -2,50 +2,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#cecece"
     xmlns:design="http://schemas.android.com/apk/res-auto"
     tools:context=".PostFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TODO: Add text field for content, tags fix buttons-->
+
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="203dp"
+        android:layout_height="38dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="14dp"
         android:layout_marginTop="18dp"
         android:text="@string/Title" />
 
+
+    <EditText
+        android:id="@+id/editTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="75dp"
+        android:background="#ffffff"
+        android:ems="10"
+        android:text="@string/Title" android:inputType="text" />
+
+
+    <EditText
+        android:id="@+id/editContent"
+        android:background="#ffffff"
+        android:layout_width="fill_parent"
+        android:layout_height="53dp"
+        android:layout_below="@+id/editTitle"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:inputType="text"
+        android:lines="20"
+        android:scrollbars="vertical"
+        android:text="@string/Content" />
+
+    <EditText
+        android:id="@+id/editTags"
+        android:background="#ffffff"
+        android:layout_width="fill_parent"
+        android:layout_height="53dp"
+        android:layout_below="@+id/editContent"
+        android:layout_marginTop="240dp"
+        android:ems="10"
+        android:inputType="text"
+        android:lines="20"
+        android:scrollbars="vertical"
+        android:text="@string/Tags" />
     <Button
         android:id="@+id/button_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="130dp"
+        android:layout_alignLeft="@+id/editTags"
+        android:layout_below="@+id/editTags"
+        android:layout_marginTop="365dp"
+        android:layout_marginLeft="25dp"
         android:text="@string/SubmitButton" />
-
 
     <Button
         android:id="@+id/button_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="130dp"
+        android:layout_alignRight="@+id/editTags"
+        android:layout_below="@+id/editTags"
+        android:layout_marginTop="365dp"
+        android:layout_marginLeft="260dp"
         android:text="@string/CancelButton" />
-
-    <EditText
-        android:id="@+id/edittext"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button_submit"
-        android:layout_alignRight="@+id/button_cancel"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="61dp"
-        android:ems="10"
-        android:text="@string/Title" android:inputType="text" />
-
 
 
 </FrameLayout>

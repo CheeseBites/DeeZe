@@ -18,6 +18,9 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,24 +35,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class PostFragment extends android.support.v4.app.Fragment{
+public class PostFragment extends android.support.v4.app.Fragment  {
 
-    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
-    GeoFire geoFire = new GeoFire(ref);
-    double latitude;
-    double longitude;
-    String postTitle;
-    String postContent;
+    private static final String FIRE_DB = "https://eyeris-b8879.firebaseio.com";
+    private static final String GEO_FIRE_REF = FIRE_DB + "/geofire";
+
+    //setup firebase
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(FIRE_DB);
+
+    DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF).child("posts");
+    GeoFire geoFire = new GeoFire(geoRef);
+
+    double latitude = 100.0;
+    double longitude = -90.0;
+    String postTitle = "WORK PLEASE";
+    String postContent = "???";
     String postTags;
     String postId;
     String username;
-    String postDate;
-    Location mLastLocation;
+    String postDate = "4/15/2017";
+    private Location mLastLocation;
     updateLocation locationUpdate = null;
 
     public PostFragment() {
 
     }
+
 
     //fragment takes location from activity
     public interface updateLocation {
@@ -74,6 +85,7 @@ public class PostFragment extends android.support.v4.app.Fragment{
             public void onClick(View v) {
                 // get location, submit the post
                 submitPost();
+                //change fragment to Home
             }
         });
 
@@ -81,7 +93,7 @@ public class PostFragment extends android.support.v4.app.Fragment{
         final Button cancelButton = (Button) view.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //change activity to homepage
+                //change fragment to homepage
 
             }
         });
@@ -95,7 +107,6 @@ public class PostFragment extends android.support.v4.app.Fragment{
         postId = submitToFirebase();
 
         //3.send to geofire with unique ID + longitude/latitude
-        mLastLocation = locationUpdate.getLocation();//interfaces with MainActivity to return Location
         submitToGeofire(postId);
     }
 
@@ -110,8 +121,8 @@ public class PostFragment extends android.support.v4.app.Fragment{
 
     private void submitToGeofire(String postId) {
         //somehow get mLastLocation
-        latitude = mLastLocation.getLatitude();
-        longitude = mLastLocation.getLongitude();
+        //latitude = mLastLocation.getLatitude();
+        //longitude = mLastLocation.getLongitude();
 
         geoFire.setLocation(postId, new GeoLocation(this.latitude, this.longitude),
                 new GeoFire.CompletionListener() {
@@ -126,7 +137,7 @@ public class PostFragment extends android.support.v4.app.Fragment{
                 });
     }
 
-    @Override
+   /* @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (activity instanceof updateLocation) {
@@ -134,5 +145,6 @@ public class PostFragment extends android.support.v4.app.Fragment{
         } else {
             throw new ClassCastException();
         }
-    }
+    }*/
+
 }
