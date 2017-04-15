@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:design="http://schemas.android.com/apk/res-auto"
-    android:background="#17caa4"
+    android:background="#15968d"
     tools:context=".HomePageAdapter">
 
     <Spinner
