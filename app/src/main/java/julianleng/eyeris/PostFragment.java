@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.location.Location;
@@ -43,15 +44,15 @@ public class PostFragment extends android.support.v4.app.Fragment  {
     //setup firebase
     DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(FIRE_DB);
 
-    DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF).child("posts");
+    DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF);
     GeoFire geoFire = new GeoFire(geoRef);
 
-    double latitude = 100.0;
-    double longitude = -90.0;
-    String postTitle = "WORK PLEASE";
-    String postContent = "???";
+    double latitude = 0.0;
+    double longitude = 0.0;
+    String postTitle = "test1";
+    String postContent = "testing";
     String postTags;
-    String postId;
+    String postId = "";
     String username;
     String postDate = "4/15/2017";
     private Location mLastLocation;
@@ -104,10 +105,11 @@ public class PostFragment extends android.support.v4.app.Fragment  {
 
     private void submitPost() {
         //1.send to Firebase 2. return with unique key
-        postId = submitToFirebase();
+        this.postId = submitToFirebase();
+        Log.d("myTag", postId);
 
         //3.send to geofire with unique ID + longitude/latitude
-        submitToGeofire(postId);
+        submitToGeofire(this.postId);
     }
 
     //submits to Firebase and returns the unique string generated
@@ -116,7 +118,7 @@ public class PostFragment extends android.support.v4.app.Fragment  {
         DatabaseReference postsRef = ref.child("posts");
         DatabaseReference newPostRef = postsRef.push();
         newPostRef.setValue(new ScrollablePosts(postDate, postTitle, postContent));
-        return postsRef.getKey();
+        return newPostRef.getKey();
     }
 
     private void submitToGeofire(String postId) {
