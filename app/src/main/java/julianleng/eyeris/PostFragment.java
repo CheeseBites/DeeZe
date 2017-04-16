@@ -36,7 +36,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class PostFragment extends android.support.v4.app.Fragment  {
+public class PostFragment extends android.support.v4.app.Fragment implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String FIRE_DB = "https://eyeris-b8879.firebaseio.com";
     private static final String GEO_FIRE_REF = FIRE_DB + "/geofire";
@@ -47,27 +48,55 @@ public class PostFragment extends android.support.v4.app.Fragment  {
     DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF);
     GeoFire geoFire = new GeoFire(geoRef);
 
-    double latitude = 0.0;
-    double longitude = 0.0;
+    double latitude = 90.0;
+    double longitude = 90.0;
     String postTitle = "test1";
     String postContent = "testing";
     String postTags;
     String postId = "";
     String username;
     String postDate = "4/15/2017";
-    private Location mLastLocation;
-    updateLocation locationUpdate = null;
+    GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation = null;
+
 
     public PostFragment() {
 
     }
 
-
-    //fragment takes location from activity
-    public interface updateLocation {
-        public Location getLocation();
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if(mLastLocation != null) {
+            this.latitude = mLastLocation.getLatitude();
+            this.longitude = mLastLocation.getLatitude();
+        }
     }
 
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +108,14 @@ public class PostFragment extends android.support.v4.app.Fragment  {
     //still figuring out buttons in fragments
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
 
         //submit
         final Button submitButton = (Button) view.findViewById(R.id.button_submit);
@@ -122,9 +159,8 @@ public class PostFragment extends android.support.v4.app.Fragment  {
     }
 
     private void submitToGeofire(String postId) {
-        //somehow get mLastLocation
-        //latitude = mLastLocation.getLatitude();
-        //longitude = mLastLocation.getLongitude();
+        //gets location, saves longitude and latitude
+        getLastLocation();
 
         geoFire.setLocation(postId, new GeoLocation(this.latitude, this.longitude),
                 new GeoFire.CompletionListener() {
@@ -139,14 +175,36 @@ public class PostFragment extends android.support.v4.app.Fragment  {
                 });
     }
 
-   /* @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof updateLocation) {
-            locationUpdate = (updateLocation) activity;
-        } else {
-            throw new ClassCastException();
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    private void getLastLocation(){
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
-    }*/
+        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        this.latitude = mLastLocation.getLatitude();
+        this.longitude = mLastLocation.getLatitude();
+    }
+
+
 
 }

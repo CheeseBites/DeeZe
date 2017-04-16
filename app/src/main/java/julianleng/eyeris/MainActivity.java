@@ -30,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, PostFragment.updateLocation {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private HomePageAdapter adapter;
     private BottomNavigationView bottomNavigation;
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
@@ -136,24 +135,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
-
-    @Override
-    public Location getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return mLastLocation;
-        }
-        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        return this.mLastLocation;
-    }
 }
