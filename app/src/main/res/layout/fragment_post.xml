@@ -1,5 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:windowSoftInputMode="adjustPan"
+    android:isScrollContainer="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#cecece"
@@ -14,8 +16,8 @@
         android:layout_height="38dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="25dp"
         android:text="@string/Title" />
 
 
@@ -24,24 +26,43 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
         android:background="#ffffff"
         android:ems="10"
-        android:text="@string/Title" android:inputType="text" />
+        android:inputType="textMultiLine" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="203dp"
+        android:layout_height="38dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="110dp"
+        android:text="@string/Content" />
 
 
     <EditText
         android:id="@+id/editContent"
+        android:inputType = "textMultiLine"
         android:background="#ffffff"
         android:layout_width="fill_parent"
         android:layout_height="53dp"
         android:layout_below="@+id/editTitle"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="130dp"
         android:ems="10"
-        android:inputType="text"
         android:lines="20"
-        android:scrollbars="vertical"
-        android:text="@string/Content" />
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="203dp"
+        android:layout_height="38dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="220dp"
+        android:text="@string/Tags" />
 
     <EditText
         android:id="@+id/editTags"
@@ -51,17 +72,61 @@
         android:layout_below="@+id/editContent"
         android:layout_marginTop="240dp"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:lines="20"
-        android:scrollbars="vertical"
-        android:text="@string/Tags" />
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="203dp"
+        android:layout_height="38dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="312dp"
+        android:text="@string/Latitude" />
+
+    <EditText
+        android:id="@+id/editLatitude"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="330dp"
+        android:layout_marginLeft="110dp"
+        android:background="#ffffff"
+        android:ems="10"
+        android:text = "-90.0"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="203dp"
+        android:layout_height="38dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="312dp"
+        android:text="@string/Longitude" />
+
+    <EditText
+        android:id="@+id/editLongitude"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="330dp"
+        android:layout_marginLeft="200dp"
+        android:background="#ffffff"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text = "-90.0"/>
+
     <Button
         android:id="@+id/button_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/editTags"
         android:layout_below="@+id/editTags"
-        android:layout_marginTop="365dp"
+        android:layout_marginTop="400dp"
         android:layout_marginLeft="25dp"
         android:text="@string/SubmitButton" />
 
@@ -71,7 +136,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/editTags"
         android:layout_below="@+id/editTags"
-        android:layout_marginTop="365dp"
+        android:layout_marginTop="400dp"
         android:layout_marginLeft="260dp"
         android:text="@string/CancelButton" />
 

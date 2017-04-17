@@ -34,6 +34,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 public class PostFragment extends android.support.v4.app.Fragment implements
@@ -48,16 +49,23 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF);
     GeoFire geoFire = new GeoFire(geoRef);
 
-    double latitude = 90.0;
-    double longitude = 90.0;
-    String postTitle = "test1";
-    String postContent = "testing";
+    double latitude = 0.0;
+    double longitude = 0.0;
+    String postTitle;
+    String postContent;
     String postTags;
-    String postId = "";
+    String postId ;
     String username;
-    String postDate = "4/15/2017";
+    String postDate;
     GoogleApiClient mGoogleApiClient;
     private Location mLastLocation = null;
+
+    EditText eTitle;
+    EditText eContent;
+    EditText eTags;
+    EditText eLongitude;
+    EditText eLatitude;
+
 
 
     public PostFragment() {
@@ -90,6 +98,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
 
     @Override
     public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
 
     }
 
@@ -100,6 +109,14 @@ public class PostFragment extends android.support.v4.app.Fragment implements
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
     }
 
 
@@ -109,19 +126,29 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
+
+        eTitle = (EditText) view.findViewById(R.id.editTitle);
+        eContent = (EditText) view.findViewById(R.id.editContent);
+        eTags = (EditText) view.findViewById(R.id.editTags);
+        eLongitude = (EditText) view.findViewById(R.id.editLongitude);
+        eLatitude = (EditText) view.findViewById(R.id.editLatitude);
 
         //submit
         final Button submitButton = (Button) view.findViewById(R.id.button_submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // get location, submit the post
+                postTitle = eTitle.getText().toString();
+                postContent = eContent.getText().toString();
+                postTags = eTags.getText().toString();
+                latitude = Double.parseDouble(eLatitude.getText().toString());
+                if(latitude < -90.0 || latitude > 90.0 ){
+                    latitude = 0.0;
+                }
+                longitude = Double.parseDouble(eLongitude.getText().toString());
+                if(longitude < -180.0 || longitude > 180.0){
+                    longitude = 0.0;
+                }
                 submitPost();
                 //change fragment to Home
             }
@@ -132,6 +159,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //change fragment to homepage
+                onStop();
 
             }
         });
@@ -154,7 +182,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
         //send postTitle, postContent, postTags, current User username
         DatabaseReference postsRef = ref.child("posts");
         DatabaseReference newPostRef = postsRef.push();
-        newPostRef.setValue(new ScrollablePosts(postDate, postTitle, postContent));
+        newPostRef.setValue(new ScrollablePosts(postDate, postContent, postTitle));
         return newPostRef.getKey();
     }
 
@@ -202,7 +230,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
         this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         this.latitude = mLastLocation.getLatitude();
-        this.longitude = mLastLocation.getLatitude();
+        this.longitude = mLastLocation.getLongitude();
     }
 
 
