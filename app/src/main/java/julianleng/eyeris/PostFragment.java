@@ -2,7 +2,9 @@ package julianleng.eyeris;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.icu.text.DateFormat;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -35,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import java.util.Date;
 
 
 public class PostFragment extends android.support.v4.app.Fragment implements
@@ -156,6 +160,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
                 if(longitude < -180.0 || longitude > 180.0){
                     longitude = 0.0;
                 }
+                postDate = DateFormat.getDateTimeInstance().format(new Date());
                 submitPost();
                 //change fragment to Home
                 fragment = new HomeFragment();

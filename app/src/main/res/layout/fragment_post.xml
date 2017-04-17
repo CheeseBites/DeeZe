@@ -29,6 +29,7 @@
         android:layout_marginTop="50dp"
         android:background="#ffffff"
         android:ems="10"
+        android:hint = "@string/Title"
         android:inputType="textMultiLine" />
 
     <TextView
@@ -52,6 +53,7 @@
         android:layout_marginTop="130dp"
         android:ems="10"
         android:lines="20"
+        android:hint = "@string/Content"
         android:scrollbars="vertical" />
 
     <TextView
@@ -73,7 +75,8 @@
         android:layout_marginTop="240dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:lines="20"
+        android:lines="10"
+        android:hint = "@string/Tags"
         android:scrollbars="vertical" />
 
     <TextView
