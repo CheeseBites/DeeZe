@@ -49,6 +49,9 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF);
     GeoFire geoFire = new GeoFire(geoRef);
 
+    private android.support.v4.app.Fragment fragment;
+    private FragmentManager fragmentManager;
+
     double latitude = 0.0;
     double longitude = 0.0;
     String postTitle;
@@ -110,6 +113,9 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        fragmentManager = getFragmentManager();
+        fragment = new PostFragment();
+
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                     .addConnectionCallbacks(this)
@@ -137,6 +143,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
         final Button submitButton = (Button) view.findViewById(R.id.button_submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
                 // get location, submit the post
                 postTitle = eTitle.getText().toString();
                 postContent = eContent.getText().toString();
@@ -151,6 +158,10 @@ public class PostFragment extends android.support.v4.app.Fragment implements
                 }
                 submitPost();
                 //change fragment to Home
+                fragment = new HomeFragment();
+                final android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.main_container, fragment).commit();
+
             }
         });
 
@@ -160,7 +171,9 @@ public class PostFragment extends android.support.v4.app.Fragment implements
             public void onClick(View v) {
                 //change fragment to homepage
                 onStop();
-
+                fragment = new HomeFragment();
+                final android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.main_container, fragment).commit();
             }
         });
 
