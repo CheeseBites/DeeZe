@@ -82,17 +82,17 @@
         android:layout_height="38dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="105dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="312dp"
         android:text="@string/Latitude" />
 
     <EditText
         android:id="@+id/editLatitude"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="125dp"
+        android:layout_height="25dp"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="330dp"
-        android:layout_marginLeft="110dp"
+        android:layout_marginLeft="25dp"
         android:background="#ffffff"
         android:ems="10"
         android:text = "-90.0"
@@ -110,8 +110,8 @@
 
     <EditText
         android:id="@+id/editLongitude"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="125dp"
+        android:layout_height="25dp"
         android:layout_below="@+id/textView1"
         android:layout_marginTop="330dp"
         android:layout_marginLeft="200dp"
@@ -137,7 +137,7 @@
         android:layout_alignRight="@+id/editTags"
         android:layout_below="@+id/editTags"
         android:layout_marginTop="400dp"
-        android:layout_marginLeft="260dp"
+        android:layout_marginLeft="200dp"
         android:text="@string/CancelButton" />
 
 
