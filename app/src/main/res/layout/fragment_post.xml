@@ -126,8 +126,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/editTags"
         android:layout_below="@+id/editTags"
-        android:layout_marginTop="400dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginTop="375dp"
+        android:layout_marginLeft="45dp"
         android:text="@string/SubmitButton" />
 
     <Button
@@ -136,8 +136,8 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/editTags"
         android:layout_below="@+id/editTags"
-        android:layout_marginTop="400dp"
-        android:layout_marginLeft="200dp"
+        android:layout_marginTop="375dp"
+        android:layout_marginLeft="215dp"
         android:text="@string/CancelButton" />
 
 
