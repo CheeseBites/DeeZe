@@ -62,7 +62,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Longitude">Longitude</string>
+    <string name="Latitude">Latitude</string>
     <string name="continue_button">Continue</string>
     <string name="logout">Logout</string>
     <string name="options">Options</string>
+
+    <string name="Title">Title</string>
+    <string name="Tags">Tags</string>
+    <string name="Content">Content</string>
+    <string name="SubmitButton">Submit</string>
+    <string name="CancelButton">Cancel</string>
 </resources>

@@ -12,20 +12,16 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@null"
-        android:src="@mipmap/ic_upvote" />
+        android:src="@mipmap/upvote_icon2" />
 
     <TextView
         android:id="@+id/vote_count"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#c8000000"
+        android:textColor="#c0000000"
+        android:textSize="20sp"
         android:text="@string/upvote_count" />
 
-    <ImageButton
-        android:id="@+id/downvote_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:src="@mipmap/ic_downvote" />
 </LinearLayout>

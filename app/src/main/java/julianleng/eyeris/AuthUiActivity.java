@@ -77,7 +77,7 @@ public class AuthUiActivity extends AppCompatActivity {
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(getSelectedTheme())
-                        .setLogo(R.drawable.firebase_auth_120dp)
+                        .setLogo(R.drawable.app_icon)
                         .setProviders(getSelectedProviders())
                         .setIsSmartLockEnabled(true)
                         .setAllowNewEmailAccounts(true)

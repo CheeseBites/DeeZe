@@ -28,20 +28,12 @@ import java.util.List;
  * Created by julianleng on 4/11/17.
  */
 
-public class HomeFragment extends android.support.v4.app.Fragment{
-    private HomePageAdapter adapter;
-    private List<ScrollablePosts> listItems;public static final String POSTS = "posts";
+public class HomeFragment extends android.support.v4.app.Fragment{public static final String POSTS = "posts";
     private RecyclerView mPostsRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<ScrollablePosts, HomePageAdapter.HomeViewHolder> mFirebaseAdapter;
-
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
     private static final String TAG = "HomeFragment";
-    private String mUsername;
-    private String mPhotoUrl;
-    private GoogleApiClient mGoogleApiClient;
     public HomeFragment(){
 
     }
@@ -61,6 +53,7 @@ public class HomeFragment extends android.support.v4.app.Fragment{
         mPostsRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setStackFromEnd(true);
+        mLinearLayoutManager.setReverseLayout(true);
         //Initializing Database
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<ScrollablePosts, HomePageAdapter.HomeViewHolder>(
