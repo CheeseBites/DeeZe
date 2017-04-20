@@ -22,6 +22,7 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -38,12 +39,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Date;
 
 
-public class PostFragment extends android.support.v4.app.Fragment implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class PostFragment extends android.support.v4.app.Fragment implements locationHandler.locationChanged{
 
     private static final String FIRE_DB = "https://eyeris-b8879.firebaseio.com";
     private static final String GEO_FIRE_REF = FIRE_DB + "/geofire";
@@ -65,14 +66,14 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     String postId ;
     String username;
     String postDate;
-    GoogleApiClient mGoogleApiClient;
     private Location mLastLocation = null;
+    locationHandler locationHandler;
 
     EditText eTitle;
     EditText eContent;
     EditText eTags;
-    EditText eLongitude;
-    EditText eLatitude;
+    TextView eLongitude;
+    TextView eLatitude;
 
 
 
@@ -80,54 +81,31 @@ public class PostFragment extends android.support.v4.app.Fragment implements
 
     }
 
+
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if(mLastLocation != null) {
-            this.latitude = mLastLocation.getLatitude();
-            this.longitude = mLastLocation.getLatitude();
-        }
+    public void newLocation() {
+        Log.i("UPDATE","POST UPDATED");
+        getLastLocation();
+        eLatitude.setText(String.valueOf(latitude));
+        eLongitude.setText(String.valueOf(longitude));
     }
 
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
+    public interface locationInterface{
+        public Location getLocation();
+        public double getLongitude();
+        public double getLatitude();
 
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationHandler = new locationHandler(getContext());
+        Log.i("location", "handler");
 
         fragmentManager = getFragmentManager();
         fragment = new PostFragment();
-
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
     }
 
 
@@ -137,12 +115,13 @@ public class PostFragment extends android.support.v4.app.Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
+        getLastLocation();
 
         eTitle = (EditText) view.findViewById(R.id.editTitle);
         eContent = (EditText) view.findViewById(R.id.editContent);
         eTags = (EditText) view.findViewById(R.id.editTags);
-        eLongitude = (EditText) view.findViewById(R.id.editLongitude);
-        eLatitude = (EditText) view.findViewById(R.id.editLatitude);
+
+
 
         //submit
         final Button submitButton = (Button) view.findViewById(R.id.button_submit);
@@ -153,14 +132,6 @@ public class PostFragment extends android.support.v4.app.Fragment implements
                 postTitle = eTitle.getText().toString();
                 postContent = eContent.getText().toString();
                 postTags = eTags.getText().toString();
-                latitude = Double.parseDouble(eLatitude.getText().toString());
-                if(latitude < -90.0 || latitude > 90.0 ){
-                    latitude = 0.0;
-                }
-                longitude = Double.parseDouble(eLongitude.getText().toString());
-                if(longitude < -180.0 || longitude > 180.0){
-                    longitude = 0.0;
-                }
                 postDate = DateFormat.getDateTimeInstance().format(new Date());
                 submitPost();
                 //change fragment to Home
@@ -221,36 +192,14 @@ public class PostFragment extends android.support.v4.app.Fragment implements
                 });
     }
 
-    public void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
     private void getLastLocation(){
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        mLastLocation = locationHandler.getLocation();
+        longitude = locationHandler.getLongitude();
+        latitude = locationHandler.getLatitude();
+
+        if(mLastLocation == null){
+            Log.i("fuck", "fuck");
         }
-        this.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        this.latitude = mLastLocation.getLatitude();
-        this.longitude = mLastLocation.getLongitude();
     }
-
-
 
 }
