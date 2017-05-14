@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="julianleng.eyeris.SearchFragment"
+    android:backgroundTintMode="src_over"
+    android:background="@drawable/Logo_Final_Red">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/search"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            tools:submitBackground="@mipmap/search_button"
+            android:background="null"/>
+
+            <requestFocus />
+        />
+
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView1"
+            android:layout_marginTop="50dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:hint = "@string/Title"
+            android:inputType="textMultiLine" />
+
+        <AutoCompleteTextView
+            android:id="@+id/autocomplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp"
+            android:ems="10">
+
+            <requestFocus />
+        </AutoCompleteTextView>
+
+    </RelativeLayout>
+
+
+</FrameLayout>
