@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //user authentication
         Intent signin = new Intent(this, AuthUiActivity.class);
         this.startActivity(signin);
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.add(R.id.main_container, new HomeFragment());
-        tx.commit();
-
         bottomNavigation = (BottomNavigationView) findViewById(R.id.navigation);
         fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManagerdefault = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_container, new HomeFragment())
+                .commit();
         bottomNavigation.setOnNavigationItemSelectedListener((new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -72,9 +72,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     case R.id.menu_post:
                             fragment = new PostFragment();
                         break;
+                    /*
                     case R.id.menu_profile:
                         fragment = new ProfileFragment();
                         break;
+                        */
                     case R.id.menu_search:
                         fragment = new SearchFragment();
                         break;

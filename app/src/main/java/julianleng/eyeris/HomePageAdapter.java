@@ -1,60 +1,71 @@
 package julianleng.eyeris;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
-
-/**
- * Created by julianleng on 3/21/17.
- */
-
-public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeViewHolder>{
+public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeViewHolder>  {
 
     private List<ScrollablePosts> listItems;
     private Context mContext;
 
-    public static class HomeViewHolder extends RecyclerView.ViewHolder {
+    public static class HomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView post_date;
         public TextView post_content;
         public TextView post_title;
-        public TextView time_ago;
         public TextView votecount;
-
-        public HomeViewHolder(View v){
+        public ImageButton vote_button;
+        private boolean pressed;
+        public int mCounter = 0;
+        public HomeViewHolder(View v) {
             super(v);
-            post_date=(TextView)itemView.findViewById(R.id.post_date);
-            post_content=(TextView)itemView.findViewById(R.id.post_content);
-            post_title=(TextView)itemView.findViewById(R.id.post_title);
-            time_ago=(TextView)itemView.findViewById(R.id.time_ago);
-            votecount=(TextView)itemView.findViewById(R.id.vote_count);
-
+            post_date = (TextView) itemView.findViewById(R.id.post_date);
+            post_content = (TextView) itemView.findViewById(R.id.post_content);
+            post_title = (TextView) itemView.findViewById(R.id.post_title);
+            votecount = (TextView) itemView.findViewById(R.id.vote_count);
+            votecount.setText("0");
+            vote_button = (ImageButton) itemView.findViewById(R.id.upvote_button);
+            pressed = false;
+            vote_button.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View v){
+            if(!isPressed()){ // I assume upvote   is checkbox
+                setPressed(true);
+                votecount.setText("" + ++mCounter);
+            }
+            else{
+                setPressed(false);
+                votecount.setText("" + --mCounter);
+            }
+        }
+        public boolean isPressed(){
+            return pressed;
         }
 
-
+        public void setPressed(boolean press){
+            this.pressed = press;
+        }
     }
 
-    public HomePageAdapter(List<ScrollablePosts> listItems, Context mContext) {
-        this.listItems = listItems;
-        this.mContext = mContext;
-    }
 
-    //Called when a new post is created
+
+    //Creates viewholders for the recyclerview to use.
     @Override
     public HomeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
         return new HomeViewHolder(v);
     }
 
-    //After creation, the data is set in onBindViewHolder, Binding the data to the view.
+    //After creating the few viewholders, they're re-binded(re-used) when scrolled out of parent view.
     @Override
     public void onBindViewHolder(HomeViewHolder holder, int position) {
 
@@ -62,7 +73,21 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         holder.post_title.setText(item.getPost_title());
         holder.post_content.setText(item.getPost_content());
         holder.post_date.setText(item.getPost_date());
-        holder.votecount.setText("" + item.getPost_votes());
+        holder.vote_button.setTag(holder);
+        holder.vote_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                HomeViewHolder viewHolder =(HomeViewHolder) v.getTag();
+                if(!v.isPressed()){ // I assume upvote   is checkbox
+                    viewHolder.vote_button.setPressed(true);
+                    viewHolder.votecount.setText("1");
+                }
+                else{
+                    viewHolder.vote_button.setPressed(false);
+                    viewHolder.votecount.setText("1");
+                    }
+            }
+        });
     }
 
     @Override
@@ -70,7 +95,12 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         return listItems.size();
     }
 
+    @Override public int getItemViewType(int position) {
+        return position;
+    }
     //The cards class
 
 
 }
+
+
