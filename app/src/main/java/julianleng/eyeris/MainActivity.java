@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Logout Successful!", Toast.LENGTH_LONG).show();
                                     startActivity(intent);
                                 }
                             }

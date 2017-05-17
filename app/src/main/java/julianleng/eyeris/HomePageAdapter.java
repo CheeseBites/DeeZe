@@ -37,14 +37,17 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
             vote_button.setOnClickListener(this);
         }
         @Override
-        public void onClick(View v){
-            if(!isPressed()){ // I assume upvote   is checkbox
-                setPressed(true);
-                votecount.setText("" + ++mCounter);
-            }
-            else{
-                setPressed(false);
-                votecount.setText("" + --mCounter);
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.upvote_button:
+                if (!isPressed()) { // I assume upvote   is checkbox
+                    setPressed(true);
+                    votecount.setText("" + ++mCounter);
+                } else {
+                    setPressed(false);
+                    votecount.setText("" + --mCounter);
+                }
+                    break;
             }
         }
         public boolean isPressed(){
@@ -73,21 +76,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         holder.post_title.setText(item.getPost_title());
         holder.post_content.setText(item.getPost_content());
         holder.post_date.setText(item.getPost_date());
-        holder.vote_button.setTag(holder);
-        holder.vote_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                HomeViewHolder viewHolder =(HomeViewHolder) v.getTag();
-                if(!v.isPressed()){ // I assume upvote   is checkbox
-                    viewHolder.vote_button.setPressed(true);
-                    viewHolder.votecount.setText("1");
-                }
-                else{
-                    viewHolder.vote_button.setPressed(false);
-                    viewHolder.votecount.setText("1");
-                    }
-            }
-        });
     }
 
     @Override
@@ -98,8 +86,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
     @Override public int getItemViewType(int position) {
         return position;
     }
-    //The cards class
-
 
 }
 

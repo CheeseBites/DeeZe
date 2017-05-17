@@ -11,15 +11,6 @@ public class ScrollablePosts {
     private String post_content;
     private String post_title;
     private int post_votes;
-    private boolean pressed = true;
-    public boolean isPressed() {
-        return pressed;
-    }
-
-    public void setPressed(boolean pressed) {
-        pressed = pressed;
-    }
-
 
     public ScrollablePosts(){
 
