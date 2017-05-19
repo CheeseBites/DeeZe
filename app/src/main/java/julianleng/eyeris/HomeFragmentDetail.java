@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +20,7 @@ public class HomeFragmentDetail extends Fragment {
 
     private ListView lv;
     private static final String TAG = "HomeFragmentDetail";
+    public List<String> comments;
 
 
     @Override
@@ -27,7 +28,7 @@ public class HomeFragmentDetail extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_home_fragment_detail,container,false);
         rootView.setTag(TAG);
 
-        //lv = (ListView) rootView.findViewById(R.id.recycler_view);
+        lv = (ListView) rootView.findViewById(R.id.detail_comment);
         Bundle args = getArguments();
 
         //Get args
@@ -42,17 +43,16 @@ public class HomeFragmentDetail extends Fragment {
         TextView TVContent = (TextView) rootView.findViewById(R.id.detail_content_text);
         TVContent.setText(content);
 
-        List<String> comments = new ArrayList<String>();
-        comments.add("This is so cool");
-        comments.add("Hello World");
+        String[] comments = {"Hello World","This is so cool"};
 
-        /*ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                comments);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                lv.getContext(),
+                R.layout.item_comment,
+                comments
+                );
 
         lv.setAdapter(arrayAdapter);
-        */
+
         return rootView;
     }
 

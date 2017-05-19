@@ -38,12 +38,13 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Rec
             Bundle args = new Bundle();
             args.putString("title", (String) post.post_title.getText());
             args.putString("content", (String) post.post_content.getText());
+            args.putParcelableArrayList("comment", post.post_comment);
             f.setArguments(args);
             ft.replace(R.id.main_container, f).commit();
             Log.i("HomeFragment", "End of pain in the ass " + position + " ");
         }
     };
-    protected HomePageAdapter homePageAdapter = new HomePageAdapter(this.getContext(), itemListener);
+    //protected HomePageAdapter homePageAdapter = new HomePageAdapter(this.getContext(), itemListener);
     private static final String TAG = "HomeFragment";
 
 
@@ -94,7 +95,8 @@ public class HomeFragment extends android.support.v4.app.Fragment implements Rec
                 viewHolder.post_content.setText(item.getPost_content());
                 viewHolder.post_date.setText(item.getPost_date());
                 viewHolder.votecount.setText("" + item.getPost_votes());
-                viewHolder.itemListener = homePageAdapter.itemListener;
+                viewHolder.post_comment = item.getPost_comments();
+                viewHolder.itemListener = itemListener;
             }
         };
 

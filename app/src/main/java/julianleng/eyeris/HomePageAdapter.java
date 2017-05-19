@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
 
     private List<ScrollablePosts> listItems;
     private Context mContext;
-    public RecyclerViewClickListener itemListener;
+    //public RecyclerViewClickListener itemListener;
 
     public static class HomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView post_date;
@@ -27,6 +28,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         public TextView post_title;
         public TextView time_ago;
         public TextView votecount;
+        public ArrayList<Comment> post_comment;
         public RecyclerViewClickListener itemListener;
 
 
@@ -57,10 +59,6 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         this.mContext = mContext;
     }
 
-    public HomePageAdapter(Context mContext, RecyclerViewClickListener itemListener) {
-        this.mContext = mContext;
-        this.itemListener = itemListener;
-    }
 
     //Called when a new post is created
     @Override
