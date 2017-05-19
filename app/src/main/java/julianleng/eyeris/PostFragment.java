@@ -162,6 +162,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements
                     longitude = 0.0;
                 }
                 postDate = DateFormat.getDateTimeInstance().format(new Date());
+                
                 submitPost();
                 //change fragment to Home
                 fragment = new HomeFragment();

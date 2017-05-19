@@ -29,6 +29,7 @@
         android:showAsAction="withText"
         android:icon="@drawable/notifications_icon"
         />
+    <!--
     <item
         android:id="@+id/menu_profile"
         android:enabled="true"
@@ -36,5 +37,5 @@
         android:showAsAction="withText"
         android:icon="@drawable/profile_icon"
         />
-
+    -->
 </menu>
