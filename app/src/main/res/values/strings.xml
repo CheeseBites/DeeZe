@@ -72,4 +72,5 @@
     <string name="Content">Content</string>
     <string name="SubmitButton">Submit</string>
     <string name="CancelButton">Cancel</string>
+    <string name="user_manual">User Manual</string>
 </resources>

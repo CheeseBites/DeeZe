@@ -3,6 +3,7 @@ package julianleng.eyeris;
 import android.content.Context;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
             vote_button = (ImageButton) itemView.findViewById(R.id.upvote_button);
             pressed = false;
             vote_button.setOnClickListener(this);
+            v.setOnClickListener(this);
         }
         @Override
         public void onClick(View v) {

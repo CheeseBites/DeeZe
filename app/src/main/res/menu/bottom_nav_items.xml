@@ -29,13 +29,12 @@
         android:showAsAction="withText"
         android:icon="@drawable/notifications_icon"
         />
-    <!--
+
     <item
-        android:id="@+id/menu_profile"
+        android:id="@+id/menu_user_manual"
         android:enabled="true"
-        android:title="@string/menu_profile"
+        android:title="@string/user_manual"
         android:showAsAction="withText"
-        android:icon="@drawable/profile_icon"
+        android:icon="@mipmap/user_manual_button"
         />
-    -->
 </menu>
