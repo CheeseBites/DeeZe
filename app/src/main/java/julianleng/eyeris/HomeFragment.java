@@ -2,8 +2,10 @@ package julianleng.eyeris;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +22,40 @@ import com.google.firebase.database.Transaction;
 
 import java.util.List;
 
-public class HomeFragment extends android.support.v4.app.Fragment{public static final String POSTS = "posts";
+public class HomeFragment extends android.support.v4.app.Fragment implements RecyclerViewClickListener{public static final String POSTS = "posts";
     private RecyclerView mPostsRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<ScrollablePosts, HomePageAdapter.HomeViewHolder> mFirebaseAdapter;
     private static final String TAG = "HomeFragment";
+
+    public RecyclerViewClickListener itemListener = new RecyclerViewClickListener() {
+        @Override
+        public void recyclerViewListClicked(View v, int position) {
+            Log.i("HomeFragment", "It worked succesfully 2 " + position + " ");
+            mFirebaseAdapter.getItem(2);
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            HomePageAdapter.HomeViewHolder post = (HomePageAdapter.HomeViewHolder) mPostsRecyclerView.getChildViewHolder(v);
+            HomeFragmentDetail f =  new HomeFragmentDetail();
+            Bundle args = new Bundle();
+            args.putString("title", (String) post.post_title.getText());
+            args.putString("content", (String) post.post_content.getText());
+            args.putParcelableArrayList("comment", post.post_comment);
+            f.setArguments(args);
+            ft.replace(R.id.main_container, f).commit();
+            Log.i("HomeFragment", "End of pain in the ass " + position + " ");
+        }
+    };
+
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        Log.i("HomeFragment", "This is here for lies " + position + " ");
+        //mFirebaseAdapter.getItem(2);
+        //final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //ft.replace(R.id.main_container, new HomeFragmentDetail(), "HomeFragmentDetail");
+
+    }
+
     public HomeFragment(){
 
     }
@@ -59,6 +89,8 @@ public class HomeFragment extends android.support.v4.app.Fragment{public static 
                 viewHolder.post_title.setText(item.getPost_title());
                 viewHolder.post_content.setText(item.getPost_content());
                 viewHolder.post_date.setText(item.getPost_date());
+                viewHolder.post_comment = item.getPost_comments();
+                viewHolder.itemListener = itemListener;
             }
         };
 

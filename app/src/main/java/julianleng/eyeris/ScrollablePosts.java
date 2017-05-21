@@ -1,5 +1,5 @@
 package julianleng.eyeris;
-
+import java.util.ArrayList;
 /**
  * Created by julianleng on 3/21/17.
  */
@@ -11,7 +11,7 @@ public class ScrollablePosts {
     private String post_content;
     private String post_title;
     private int post_votes;
-
+    private ArrayList<Comment> post_comments;
     public ScrollablePosts(){
 
     }
@@ -22,7 +22,19 @@ public class ScrollablePosts {
         this.post_title=post_title;
         this.post_votes=0;
     }
+    public ScrollablePosts(String post_date, String post_content, String post_title, ArrayList<Comment> post_comments){
+        this.post_content=post_content;
+        this.post_date=post_date;
+        this.post_title=post_title;
+        this.post_comments=post_comments;
+    }
+    public ArrayList<Comment> getPost_comments() {
+        return post_comments;
+    }
 
+    public void setPost_comments(ArrayList<Comment> post_comments) {
+        this.post_comments = post_comments;
+    }
     public String getPost_date() {
         return post_date;
     }

@@ -1,17 +1,15 @@
 package julianleng.eyeris;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
+import java.util.ArrayList;
 import java.util.List;
 public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeViewHolder>  {
 
@@ -26,6 +24,9 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         public ImageButton vote_button;
         private boolean pressed;
         public int mCounter = 0;
+        public ArrayList<Comment> post_comment;
+        public RecyclerViewClickListener itemListener;
+
         public HomeViewHolder(View v) {
             super(v);
             post_date = (TextView) itemView.findViewById(R.id.post_date);
@@ -42,13 +43,16 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.upvote_button:
-                if (!isPressed()) { // I assume upvote   is checkbox
-                    setPressed(true);
-                    votecount.setText("" + ++mCounter);
-                } else {
-                    setPressed(false);
-                    votecount.setText("" + --mCounter);
-                }
+                    if (!isPressed()) { // I assume upvote   is checkbox
+                        setPressed(true);
+                        votecount.setText("" + ++mCounter);
+                    } else {
+                        setPressed(false);
+                        votecount.setText("" + --mCounter);
+                    }
+                    break;
+                default:
+                    this.itemListener.recyclerViewListClicked(v, this.getLayoutPosition());
                     break;
             }
         }
@@ -61,7 +65,10 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         }
     }
 
-
+    public HomePageAdapter(List<ScrollablePosts> listItems, Context mContext) {
+        this.listItems = listItems;
+        this.mContext = mContext;
+    }
 
     //Creates viewholders for the recyclerview to use.
     @Override
@@ -79,7 +86,9 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.HomeVi
         holder.post_content.setText(item.getPost_content());
         holder.post_date.setText(item.getPost_date());
     }
-
+    public ScrollablePosts getItem(int position){
+        return listItems.get(position);
+    }
     @Override
     public int getItemCount() {
         return listItems.size();
