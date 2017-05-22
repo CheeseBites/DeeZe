@@ -117,8 +117,8 @@ public class locationHandler implements GoogleApiClient.ConnectionCallbacks, Goo
         longitude = location.getLongitude();
         Log.i("latitude"," " + latitude);
 
-        //maybe implement an interface that will return this to post and home?
-        locationContext.newLocation();
+        //newLocation() defined in MainActivity
+        //locationContext.newLocation();
 
     }
 

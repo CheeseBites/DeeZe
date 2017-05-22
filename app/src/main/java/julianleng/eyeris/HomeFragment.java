@@ -1,39 +1,92 @@
 package julianleng.eyeris;
 
-import android.app.Fragment;
-import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by julianleng on 4/11/17.
- */
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static java.sql.Types.NULL;
 
-public class HomeFragment extends android.support.v4.app.Fragment{public static final String POSTS = "posts";
+public class HomeFragment extends android.support.v4.app.Fragment implements RecyclerViewClickListener, locationHandler.locationChanged{
+    public static final String POSTS = "posts";
     private RecyclerView mPostsRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<ScrollablePosts, HomePageAdapter.HomeViewHolder> mFirebaseAdapter;
     private static final String TAG = "HomeFragment";
+    private static final String FIRE_DB = "https://eyeris-b8879.firebaseio.com";
+    private static final String FIRE_DB_POSTS = FIRE_DB + "/posts";
+    private static final String GEO_FIRE_REF = FIRE_DB + "/geofire";
+
+    //location stuff
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private Location mLastLocation = null;
+    private locationHandler locationHandler;
+
+    //setup firebase
+    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl(FIRE_DB);
+    DatabaseReference postRef = FirebaseDatabase.getInstance().getReferenceFromUrl(FIRE_DB_POSTS);
+
+    DatabaseReference geoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(GEO_FIRE_REF);
+    GeoFire geoFire = new GeoFire(geoRef);
+    List<ScrollablePosts> postsInRange =
+            Collections.synchronizedList(new ArrayList<ScrollablePosts>());
+
+    public RecyclerViewClickListener itemListener = new RecyclerViewClickListener() {
+        @Override
+        public void recyclerViewListClicked(View v, int position) {
+            Log.i("HomeFragment", "It worked succesfully 2 " + position + " ");
+            mFirebaseAdapter.getItem(2);
+            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+            HomePageAdapter.HomeViewHolder post = (HomePageAdapter.HomeViewHolder) mPostsRecyclerView.getChildViewHolder(v);
+            HomeFragmentDetail f =  new HomeFragmentDetail();
+            Bundle args = new Bundle();
+            args.putString("title", (String) post.post_title.getText());
+            args.putString("content", (String) post.post_content.getText());
+            args.putParcelableArrayList("comment", post.post_comment);
+            f.setArguments(args);
+            ft.replace(R.id.main_container, f).commit();
+            Log.i("HomeFragment", "End of pain in the ass " + position + " ");
+        }
+    };
+
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        Log.i("HomeFragment", "This is here for lies " + position + " ");
+        //mFirebaseAdapter.getItem(2);
+        //final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //ft.replace(R.id.main_container, new HomeFragmentDetail(), "HomeFragmentDetail");
+
+    }
+
     public HomeFragment(){
 
     }
@@ -67,9 +120,12 @@ public class HomeFragment extends android.support.v4.app.Fragment{public static 
                 viewHolder.post_title.setText(item.getPost_title());
                 viewHolder.post_content.setText(item.getPost_content());
                 viewHolder.post_date.setText(item.getPost_date());
-                viewHolder.votecount.setText("" + item.getPost_votes());
+                viewHolder.post_comment = item.getPost_comments();
+                viewHolder.itemListener = itemListener;
             }
         };
+
+
 
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -91,7 +147,83 @@ public class HomeFragment extends android.support.v4.app.Fragment{public static 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        locationHandler = new locationHandler(getContext());
 
     }
 
+    public void onStart(){
+        super.onStart();
+        filterPosts();
+    }
+
+    private void filterPosts(){
+        //getLastLocation();
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latitude,longitude), 0.6);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                 //makePost(key);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                //nothing for now
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                //doesn't matter
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                //sort(default newest)
+                synchronized (postsInRange){
+                    if(!postsInRange.isEmpty()) {
+                        Collections.sort(postsInRange, ScrollablePosts.getDateComparator());
+                    }
+                }
+                //display
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                System.err.println("There was an error with this query: " + error);
+            }
+        });
+    }
+
+
+    private void makePost(String key){
+        postRef.orderByKey().equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ScrollablePosts post = dataSnapshot.getValue(ScrollablePosts.class);
+                postsInRange.add(post);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // ...
+                Log.i("error","error");
+            }
+        });
+    }
+
+    @Override
+    public void newLocation() {
+        Log.i("UPDATE","POST UPDATED");
+        getLastLocation();
+    }
+
+    public void getLastLocation(){
+        mLastLocation = locationHandler.getLocation();
+        longitude = locationHandler.getLongitude();
+        latitude = locationHandler.getLatitude();
+
+        if(mLastLocation == null){
+            Log.i("fuck", "fuck");
+        }
+    }
 }
+

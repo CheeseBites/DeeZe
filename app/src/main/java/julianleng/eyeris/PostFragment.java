@@ -91,14 +91,6 @@ public class PostFragment extends android.support.v4.app.Fragment implements loc
     }
 
 
-    public interface locationInterface{
-        public Location getLocation();
-        public double getLongitude();
-        public double getLatitude();
-
-    }
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         locationHandler = new locationHandler(getContext());
@@ -132,7 +124,7 @@ public class PostFragment extends android.support.v4.app.Fragment implements loc
                 postTitle = eTitle.getText().toString();
                 postContent = eContent.getText().toString();
                 postTags = eTags.getText().toString();
-                postDate = DateFormat.getDateTimeInstance().format(new Date());
+                postDate = DateFormat.getDateTimeInstance().format(new Date("dd/MM/yyyy"));
                 submitPost();
                 //change fragment to Home
                 fragment = new HomeFragment();

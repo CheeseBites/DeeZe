@@ -12,6 +12,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@null"
+        android:clickable="true"
         android:src="@mipmap/upvote_icon2" />
 
     <TextView
@@ -22,6 +23,6 @@
         android:gravity="center"
         android:textColor="#c0000000"
         android:textSize="20sp"
-        android:text="@string/upvote_count" />
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>
